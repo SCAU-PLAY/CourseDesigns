@@ -10,8 +10,10 @@ import java.io.File;
  * Created by hongyeah on 2015/1/29.
  */
 public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSelectionListener{
-
-    public static void main(String[] agr) {
+    private JSplitPane split;
+    private JScrollPane treeOfFile;
+    private JPanel panel;
+    public static void main(String[] agr) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         new JTreeTest();
         File file = new File("d://Desktop");
         if (file.exists()) {
@@ -19,20 +21,21 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
             System.out.println("OK");
         }
     }
-    public JTreeTest(){
+    public JTreeTest() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         super("JTree");
         InitJtree();
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         this.setSize(800,500);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
-    public void InitJtree(){
+    public void InitJtree() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         JNode mycomputer = new JNode("我的电脑");
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         JTree jtree = new JTree(mycomputer);
         jtree.addTreeExpansionListener(this);
         jtree.addTreeSelectionListener(this);
-
         for(char temp = 'A' ; temp<='Z' ; temp++)
         {
             File file = new File(temp +":");
@@ -40,7 +43,14 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
                 mycomputer.add(new JNode(file,new String(String.valueOf(temp))));
             }
         }
-        this.add(jtree);
+        treeOfFile = new JScrollPane(jtree);
+        panel = new JPanel();
+        split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeOfFile,panel);
+        this.add(split);
+        split.setDividerLocation(150);
+        split.setLastDividerLocation(200);
+        split.setDividerSize(5);
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     }
 
     public void addnode(){
