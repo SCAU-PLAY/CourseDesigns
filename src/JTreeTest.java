@@ -4,6 +4,7 @@ import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreePath;
 import java.io.File;
 
 /**
@@ -13,12 +14,12 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
     private JSplitPane split;
     private JScrollPane treeOfFile;
     private JPanel panel;
+    public JTree jtree;
     public static void main(String[] agr) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         new JTreeTest();
         File file = new File("d://Desktop");
         if (file.exists()) {
             System.out.println(file.getName());
-            System.out.println("OK");
         }
     }
     public JTreeTest() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
@@ -33,14 +34,16 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
     public void InitJtree() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         JNode mycomputer = new JNode("我的电脑");
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        JTree jtree = new JTree(mycomputer);
+        jtree = new JTree(mycomputer);
         jtree.addTreeExpansionListener(this);
         jtree.addTreeSelectionListener(this);
         for(char temp = 'A' ; temp<='Z' ; temp++)
         {
-            File file = new File(temp +":");
+            File file = new File(temp +":\\");
             if(file.exists()){
-                mycomputer.add(new JNode(file,new String(String.valueOf(temp))));
+                JNode node = new JNode(file,new String(String.valueOf(temp)));
+                mycomputer.add(node);
+                addNode(node,1);
             }
         }
         treeOfFile = new JScrollPane(jtree);
@@ -53,22 +56,47 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     }
 
-    public void addnode(){
+    public void addNode(JNode node,int times){
+        if(times == 2) return ;
+        File[] files = node.path.listFiles();
+        if(files==null) return;
+        for(int i=0 ; i<files.length ; i++)
+        {
+            if(files[i].canRead()&&files[i].isDirectory()&&!files[i].isHidden()){
+                JNode jNode = new JNode(files[i]);
+                node.add(jNode);
+                addNode(jNode,++times);
+                times--;
+            }
+        }
     }
     @Override
     public void treeExpanded(TreeExpansionEvent event) {
-        System.out.println("OK");
+        TreePath tp = event.getPath();
+        JNode node = (JNode)tp.getLastPathComponent();
+        if(!node.isFileNode()||node.path.isFile()) return;
+        else if(node.path.isDirectory()){
+            node.removeAllChildren();
+            addNode(node, 0);
+        }
+        jtree.updateUI();
     }
 
     @Override
     public void treeCollapsed(TreeExpansionEvent event) {
+
         System.out.println("KO");
     }
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-
-        System.out.println("双击");
+        TreePath tp = e.getPath();
+        JNode node = (JNode)tp.getLastPathComponent();
+        if(!node.isFileNode()||node.path.isFile()) return;
+        else if(node.path.isDirectory()){
+            node.removeAllChildren();
+            addNode(node,0);
+        }
 
     }
 }
@@ -94,4 +122,16 @@ class JNode extends DefaultMutableTreeNode{
         super(name);
         this.path = path;
     }
+
+    public void addNode(int time) {
+        if(time == 1) return;
+        File[] files = this.path.listFiles();
+        for(int i=0 ; i<files.length ; i++)
+        {
+            JNode jNode = new JNode(files[i]);
+            this.add(jNode);
+
+        }
+    }
+
 }
