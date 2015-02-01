@@ -7,8 +7,9 @@ import java.util.ArrayList;
  * Created by hongyeah on 2015/1/25.
  */
 public class key {
-    public key(){
-
+    private int choice;
+    public key(int choice){
+        this.choice = choice;
     }
 
     BufferedReader br = null;
@@ -17,15 +18,27 @@ public class key {
 
             ArrayList<String> keys = new ArrayList<String>();
         try {
-            File file = new File("keys.txt");
-            if (file.isFile() && file.exists()) {
-                isr = new InputStreamReader(new FileInputStream(file));
-                br = new BufferedReader(isr);
-                String get = null;
-                while ((get = br.readLine()) != null) {
-                    keys.add(get);
+            if(choice == 0) {
+                File file = new File("C:\\Users\\Jiarui\\Desktop\\keys.txt");
+                if (file.isFile() && file.exists()) {
+                    isr = new InputStreamReader(new FileInputStream(file));
+                    br = new BufferedReader(isr);
+                    String get = null;
+                    while ((get = br.readLine()) != null) {
+                        keys.add(get);
+                    }
                 }
-
+            }
+            else if(choice == 1 || choice == 2){
+                File file = new File("C:\\Users\\Jiarui\\Desktop\\keys1.txt");
+                if (file.isFile() && file.exists()) {
+                    isr = new InputStreamReader(new FileInputStream(file));
+                    br = new BufferedReader(isr);
+                    String get = null;
+                    while ((get = br.readLine()) != null) {
+                        keys.add(get);
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
