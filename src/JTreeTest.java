@@ -30,27 +30,16 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
         super("JTree");
         InitJtree();
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        //SwingUtilities.updateComponentTreeUI(this);
         this.setSize(800,500);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
     }
 
     public void InitJtree() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        //JNode mycomputer = new JNode("我的电脑");
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         jtree = new JTree(createTreeModel());
         jtree.addTreeExpansionListener(this);
         jtree.addTreeSelectionListener(this);
-        /*for(char temp = 'A' ; temp<='Z' ; temp++)
-        {
-            File file = new File(temp +":\\");
-            if(file.exists()){
-                JNode node = new JNode(file,new String(String.valueOf(temp)));
-                mycomputer.add(node);
-                addNode(node,1);
-            }
-        }*/
         treeOfFile = new JScrollPane(jtree);
         panel = new JPanel();
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treeOfFile,panel);
@@ -70,21 +59,6 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
         }
         return rootNode;
     }
-
-    /*public void addNode(JNode node,int times){
-        if(times == 2) return ;
-        File[] files = node.path.listFiles();
-        if(files==null) return;
-        for(int i=0 ; i<files.length ; i++)
-        {
-            if(files[i].canRead()&&files[i].isDirectory()&&!files[i].isHidden()){
-                JNode jNode = new JNode(files[i]);
-                node.add(jNode);
-                addNode(jNode,++times);
-                times--;
-            }
-        }
-    }*/
 
     @Override
     public void treeExpanded(TreeExpansionEvent e) {
@@ -112,10 +86,6 @@ public class JTreeTest extends JFrame implements TreeExpansionListener ,TreeSele
         TreePath tp = e.getPath();
         JNode node = (JNode)tp.getLastPathComponent();
         if(!node.isFileNode()||node.path.isFile()) return;
-        /*else if(node.path.isDirectory()){
-            node.removeAllChildren();
-            addNode(node,0);
-        }*/
         Object []path= e.getPath().getPath();
         String ss="";
         for(int i=1;i <path.length;i++)
@@ -160,16 +130,6 @@ class JNode extends DefaultMutableTreeNode{
         setUserObject(path);
     }
 
-    public void addNode(int time) {
-        if(time == 1) return;
-        File[] files = this.path.listFiles();
-        for(int i=0 ; i<files.length ; i++)
-        {
-            JNode jNode = new JNode(files[i]);
-            this.add(jNode);
-
-        }
-    }
 
     public File getFile() {
         return (File)getUserObject();
@@ -188,6 +148,7 @@ class JNode extends DefaultMutableTreeNode{
         if(!isExplored()) {
             File file = getFile();
             File[] children = file.listFiles();
+            if(children == null ) return;
             for(int i=0; i < children.length; ++i)
             {
                 File f=children[i];
