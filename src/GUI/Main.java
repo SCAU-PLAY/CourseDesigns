@@ -6,13 +6,16 @@ import javax.imageio.plugins.jpeg.JPEGHuffmanTable;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileSystemView;
-import java.awt.*;
-import java.io.File;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import transform.Descend;
 /**
  * Created by Jiarui on 2015/1/30.
  */
-public class Main extends JFrame{
+public class Main extends JFrame implements ActionListener{
     private JSplitPane jSplitPane;
     private JPanel List;
     private JPanel newFile;
@@ -21,36 +24,94 @@ public class Main extends JFrame{
     private JScrollPane jScrollPaneOfNewFile;
     private JSplitPane right;
     private JPanel ListButton;
+    private JLabel WordSize;
+    private JComboBox<String>  WordSizeSelect;
+    private DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+    private JPanel jPanel;
+    
+    private String Size1;
+    
 
-    public Main() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
-        super("Ê∫ê‰ª£Á†ÅËá™Âä®ËΩ¨Êç¢Á≥ªÁªü");
+    public String getSize1()
+	{
+		return Size1;
+	}
+
+	public void setSize1(String size1)
+	{
+		Size1 = size1;
+	}
+
+	public Main() throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
+        super("‘¥¥˙¬Î◊‘∂Ø◊™ªªœµÕ≥");
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTML‰ª£Á†Å");
+        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTML¥˙¬Î"); //¥¥Ω®¥Ê∑≈◊™ªª∫ÛHTMLŒƒº˛µƒŒƒº˛º–
         if(!dir.exists()){
             dir.mkdir();
         }
+        
+        
+        
+        WordSize = new JLabel("«Î—°‘Ò◊÷ÃÂ¥Û–°:");
+        WordSize.setSize(120, 30);
+        WordSize.setLocation(600, 0);
+        
+        WordSizeSelect = new JComboBox<String>(model);
+        WordSizeSelect.setSize(80, 30);
+        WordSizeSelect.addActionListener(this);
+        WordSizeSelect.setLocation(705, 0);
+        for(int i=1;i<=6;i++)
+        {
+        	WordSizeSelect.addItem("+"+i+"∫≈◊÷ÃÂ");
+        }
+        for(int i=-6;i<=-1;i++)
+        {
+        	WordSizeSelect.addItem(""+i+"∫≈◊÷ÃÂ");
+        }
+        
         View_list view_list = new View_list();
-        JTree tree = view_list.InitTree();
-        JList list = view_list.InitList();
-        JList list1 = view_list.InitListOfNew();
+        JTree tree = view_list.InitTree();  //ªÒ»°≥ı ºªØ∫ÛµƒJTree∂‘œÛ
+        JList list = view_list.InitList();  //ªÒ»°≥ı ºªØ∫Ûµƒ¥˝◊™ªØ‘≠¥˙¬ÎŒƒº˛¡–±Ì
+        JList list1 = view_list.InitListOfNew();  //ªÒ»°◊™ªØ∫ÛµƒHTMLŒƒº˛¡–±Ì
         directory = new JScrollPane(tree);
-        directory.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Êñá‰ª∂Â§π", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Èªë‰Ωì", directory.getFont().getStyle(), 12)));
+        directory.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Œƒº˛º–", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("∫⁄ÃÂ", directory.getFont().getStyle(), 12)));
         List = new JPanel();
         jScrollPaneOfList = new JScrollPane(list);
-        jScrollPaneOfList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "ÂæÖËΩ¨Êç¢Ê∫ê‰ª£Á†ÅÊñá‰ª∂", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Èªë‰Ωì", jScrollPaneOfList.getFont().getStyle(), 12)));
+        jScrollPaneOfList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "¥˝◊™ªª‘¥¥˙¬ÎŒƒº˛", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("∫⁄ÃÂ", jScrollPaneOfList.getFont().getStyle(), 12)));
         jScrollPaneOfNewFile = new JScrollPane(list1);
-        jScrollPaneOfNewFile.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "ËΩ¨Êç¢ÂêéHTMLÊñá‰ª∂", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("Èªë‰Ωì", jScrollPaneOfNewFile.getFont().getStyle(), 12)));
+        jScrollPaneOfNewFile.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "◊™ªª∫ÛHTMLŒƒº˛", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("∫⁄ÃÂ", jScrollPaneOfNewFile.getFont().getStyle(), 12)));
         newFile = new JPanel();
+        newFile.add(WordSize);
+        newFile.add(WordSizeSelect);
         right = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jScrollPaneOfList, jScrollPaneOfNewFile);
         right.setDividerLocation(220);
         right.setLastDividerLocation(200);
         right.setDividerSize(5);
         jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,directory, right);
+        jSplitPane.setSize(800, 500);
+        jSplitPane.setLocation(0, 30);
+        
+        jPanel = new JPanel();
+        jPanel.setSize(500, 30);
+        jPanel.setLocation(0, 0);
+        jPanel.setBackground(Color.pink);
+        jPanel.setLayout(null);
+        jPanel.add(WordSize);
+        jPanel.add(WordSizeSelect);
+        
+        
         this.add(jSplitPane);
+        this.add(jPanel);
+        
         jSplitPane.setDividerLocation(200);
         jSplitPane.setLastDividerLocation(200);
         jSplitPane.setDividerSize(5);
-        this.setSize(800,500);
+        
+
+        this.setSize1((String)WordSizeSelect.getSelectedItem());
+        
+        new Descend().WriteToFile(this.getSize1());
+        this.setSize(800,530);
         this.setLocation(250,100);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setVisible(true);
@@ -59,4 +120,13 @@ public class Main extends JFrame{
     public static void main(String[] args) throws ClassNotFoundException, UnsupportedLookAndFeelException, InstantiationException, IllegalAccessException {
         new Main();
     }
+
+	@Override
+	public void actionPerformed(ActionEvent e)
+	{
+		// TODO ◊‘∂Ø…˙≥…µƒ∑Ω∑®¥Ê∏˘
+		this.setSize1((String)WordSizeSelect.getSelectedItem());
+		new Descend().WriteToFile(this.getSize1());
+	}
+
 }

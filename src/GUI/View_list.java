@@ -29,6 +29,11 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
     }
 
     public JTree jTree;
+
+    /**
+     * ³õÊ¼»¯Ê÷
+     * @return  ·µ»ØÒ»¸öJTree¶ÔÏó
+     */
     public JTree InitTree(){
         root = new Jnode();
         jTree = new JTree(root);
@@ -61,12 +66,12 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
 
     public JList jList;
     public JList jListOfNew;
-    public JList InitListOfNew(){
+    public JList InitListOfNew(){    //³õÊ¼»¯ÎÄ¼şÁĞ±íÓÃÓÚ´æ·Å×ª»»ºóµÃµ½µÄHTMLÎÄ¼ş
         jListOfNew = new JList();
         rootOfNew = new Jnode(1);
         jListOfNew.setModel(rootOfNew.listmodel1);
         jListOfNew.setCellRenderer(new LCellRender());
-        jListOfNew.addMouseListener(new MouseListener() {
+        jListOfNew.addMouseListener(new MouseListener() {   //Ôö¼ÓÊó±ê¼àÌı¡ª¡ªË«»÷´ò¿ªHTMLÎÄ¼ş
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() == 2){
@@ -103,8 +108,13 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
         });
         return jListOfNew;
     }
-    public void addToList(FileSystemView fileSystemView){
-        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTMLä»£ç ");
+
+    /**
+     * É¨ÃèÖ¸¶¨ÎÄ¼ş¼ĞµÄHTMLÎÄ¼ş£¬²¢½«ÆäÔÚ½çÃæÖĞÏÔÊ¾³öÀ´
+     * @param fileSystemView
+     */
+    public void addToList(FileSystemView fileSystemView){   //ÖØĞÂÉ¨Ãè´æ·ÅHTMLÎÄ¼şµÄÎÄ¼ş¼Ğ ¸üĞÂÎÄ¼şÁĞ±í
+        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTML´úÂë");
         System.out.println(dir.getPath());
         DefaultListModel defaultListModel = new DefaultListModel();
         File[] thiss = dir.listFiles();
@@ -117,11 +127,12 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
         rootOfNew.listmodel1 = defaultListModel;
         jListOfNew.setModel(rootOfNew.listmodel1);
     }
+
     public JList InitList(){
         jList = new JList();
         jList.setModel(root.listmodel);
         jList.setCellRenderer(new LCellRender());
-        jList.addMouseListener(new MouseListener() {
+        jList.addMouseListener(new MouseListener() {  //Ìí¼Ó´ı×ª»¯ÎÄ¼şÁĞ±íµÄ¼àÌıÊÂ¼ş£¬ÈôË«»÷Ôò½øĞĞÏàÓ¦µÄÔ´´úÂë×ª»¯
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount() == 2) {
@@ -143,26 +154,31 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
                             highLight.Login(((LNode) (jList.getModel().getElementAt(index))).file.getPath(),2);
                         }
                         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-                        String aim = fileSystemView.getDefaultDirectory().getPath() + "\\HTMLä»£ç \\" + name;
+                        String aim = fileSystemView.getDefaultDirectory().getPath() + "\\HTML´úÂë\\" + name;
                         File file = new File(aim);
                         DefaultListModel defaultListModel;
+
+
+                        /**
+                         * ´¦Àí×ª»¯ºóHTMLÎÄ¼şÃûÏàÍ¬µÄÇé¿ö
+                         */
                         if(file.exists()){
                             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-                            int choice = JOptionPane.showConfirmDialog(null,"æ–‡ä»¶ " + file.getName() + " å·²ç»å­˜åœ¨ï¼Œæ˜¯å¦è¦†ç›–ï¼Ÿ","æç¤º",JOptionPane.YES_NO_OPTION);
+                            int choice = JOptionPane.showConfirmDialog(null,"ÎÄ¼ş " + file.getName() + " ÒÑ¾­´æÔÚ£¬ÊÇ·ñ¸²¸Ç£¿","ÌáÊ¾",JOptionPane.YES_NO_OPTION);
                             if(choice == 0){
                                 highLight.WriteToFile(aim);
                                 addToList(fileSystemView);
                             }else{
-                                int choice1 = JOptionPane.showConfirmDialog(null,"æ˜¯å¦é‡æ–°å‘½åå¹¶ä¿å­˜ï¼Ÿ","æç¤º",JOptionPane.YES_NO_OPTION);
+                                int choice1 = JOptionPane.showConfirmDialog(null,"ÊÇ·ñÖØĞÂÃüÃû²¢±£´æ£¿","ÌáÊ¾",JOptionPane.YES_NO_OPTION);
                                 if(choice1 == 0){
-                                    String string = JOptionPane.showInputDialog(null,"è¯·é‡æ–°è¾“å…¥æ–‡ä»¶åï¼š ");
-                                    String aim1 = fileSystemView.getDefaultDirectory().getPath() + "\\HTMLä»£ç \\" + string + ".html";
+                                    String string = JOptionPane.showInputDialog(null,"ÇëÖØĞÂÊäÈëÎÄ¼şÃû£º ");
+                                    String aim1 = fileSystemView.getDefaultDirectory().getPath() + "\\HTML´úÂë\\" + string + ".html";
                                     File file1 = new File(aim1);
                                     if(file1.exists()) {
                                         File file2 = file1;
                                         while (file2.exists()) {
-                                            String name1 = JOptionPane.showInputDialog(null, "æ–‡ä»¶å·²å­˜åœ¨ï¼Œè¯·é‡æ–°è¾“å…¥ï¼š");
-                                            aim1 = fileSystemView.getDefaultDirectory().getPath() + "\\HTMLä»£ç \\" + name1 + ".html";
+                                            String name1 = JOptionPane.showInputDialog(null, "ÎÄ¼şÒÑ´æÔÚ£¬ÇëÖØĞÂÊäÈë£º");
+                                            aim1 = fileSystemView.getDefaultDirectory().getPath() + "\\HTML´úÂë\\" + name1 + ".html";
                                             file2 = new File(aim1);
                                         }
                                         highLight.WriteToFile(aim1);
@@ -215,23 +231,38 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
         });
         return jList;
     }
+
+    /**
+     * µ±Ê÷µÄÒ»¸ö½ÚµãÕ¹¿ªÊ±µ÷ÓÃ£¬Ìí¼Ó¸Ã½ÚµãµÄËï×Ó½Úµã
+     * @param event
+     */
     @Override
     public void treeExpanded(TreeExpansionEvent event) {
         TreePath tp = event.getPath();
         Jnode node = (Jnode) tp.getLastPathComponent();
         if(node.getParent()!=null)
         {
-            AddGrandNode(node);
-            jList.setModel(node.listmodel);
+            AddGrandNode(node);  //¼ÓÈëËï×Ó½Úµã
+            jList.setModel(node.listmodel);  //ÁĞ³ö¸Ã½ÚµãÎÄ¼ş¼ĞÏÂµÄÔ´´úÂëÎÄ¼ş
         }
         jList.setModel(node.listmodel);
     }
+
+    /**
+     * µ±Ê÷ÖĞµÄÒ»¸öÏî±»ÕÛµşÊ±µ÷ÓÃ
+     * @param event
+     */
     @Override
     public void treeCollapsed (TreeExpansionEvent event){
         TreePath tp = event.getPath();
         Jnode node = (Jnode) tp.getLastPathComponent();
         jList.setModel(node.listmodel);
     }
+
+    /**
+     * Ã¿µ±Ñ¡ÔñÖµ·¢Éú¸ü¸ÄÊ±µ÷ÓÃ
+     * @param e
+     */
     @Override
     public void valueChanged (TreeSelectionEvent e){
         TreePath tp = e.getPath();
@@ -241,6 +272,9 @@ public class View_list implements TreeExpansionListener,TreeSelectionListener{
     }
 }
 
+/**
+ * ÓÃÓÚ»ñÈ¡ÏµÍ³ÎÄ¼şÍ¼±ê
+ */
 class JCellRender extends DefaultTreeCellRenderer {
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
                                                   boolean leaf, int row, boolean hasFocus) {
@@ -254,11 +288,18 @@ class JCellRender extends DefaultTreeCellRenderer {
 
 }
 
+/**
+ * ½ÚµãÀà£¬ÓÃÓÚ´´½¨½Úµã¶ÔÏó
+ */
 class Jnode extends DefaultMutableTreeNode{
     public static FileSystemView Sys_file;
     public File dir = null;
     public DefaultListModel listmodel = null;
     public DefaultListModel listmodel1 = null;
+
+    /**
+     * ³õÊ¼»¯½Úµã£¬²¢½«¸Ã½ÚµãÎÄ¼ş¼ĞÖĞµÄÔ´´úÂëÎÄ¼şÏÔÊ¾ÔÚ´ı×ª»¯ÎÄ¼ş½çÃæÖĞ
+     */
     public Jnode(){
         Sys_file = FileSystemView.getFileSystemView();
         dir = Sys_file.getHomeDirectory();
@@ -272,9 +313,13 @@ class Jnode extends DefaultMutableTreeNode{
             }
         }
     }
+
+    /**
+     * ³õÊ¼»¯½Úµã£¬²¢½«¸Ã½ÚµãÎÄ¼ş¼ĞÖĞÒÑ×ª»¯µÄHTMLÎÄ¼şÏÔÊ¾ÔÚ½çÃæÖĞ
+     */
     public Jnode(int choice){
         FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTMLä»£ç ");
+        File dir = new File(fileSystemView.getDefaultDirectory().getPath() + "\\HTML´úÂë");
         listmodel1 = new DefaultListModel();
         File[] thiss = dir.listFiles();
         for (int i = 0; i < thiss.length; i++) {
@@ -284,9 +329,14 @@ class Jnode extends DefaultMutableTreeNode{
         }
 
     }
+
+    /**
+     * ¹¹Ôì·½·¨³õÊ¼»¯½Úµã£¬²¢Ìí¼Ó¸Ã½ÚµãµÄ×Ó½Úµã£¬Í¬Ê±½«¸ÃÄ¿Â¼ÏÂÔ´´úÂëÎÄ¼şÏÔÊ¾ÔÚ½çÃæÉÏ
+     * @param dir ¸Ã½ÚµãÎÄ¼ş±äÁ¿
+     */
     public Jnode(File dir){
         this.dir = dir;
-        if(this.toString().equals("ç½‘ç»œ")) return;
+        if(this.toString().equals("ÍøÂç")) return;
         File[] nexts = ((ShellFolder)(dir)).listFiles(false);
         if(listmodel == null){
             listmodel = new DefaultListModel();

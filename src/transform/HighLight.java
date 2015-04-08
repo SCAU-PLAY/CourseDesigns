@@ -1,6 +1,7 @@
 package transform;
 
 import javax.swing.*;
+
 import java.io.*;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,9 +11,10 @@ import java.util.Scanner;
  * Created by Jiarui on 2015/1/25.
  */
 public class HighLight {
-    String code = "";
+	
+	String code = "";
     //String color = "#00688B";
-    String color = "Blue";
+    String color = "Blue";  //ÉèÖÃ¸ßÁ¿¹Ø¼ü×ÖÑÕÉ«
 
     public HighLight() {
     }
@@ -23,7 +25,7 @@ public class HighLight {
         File file1 = new File(filepath);
         Scanner input1 = new Scanner(file1);
         String temp = null;
-        String t = "<html><body><pre><head>" +
+        String t = "<html>"+"<font size=\""+new Descend().ReadFromFile()+"\">"+"<body><pre><head>" +
                 "<style>" +
                 "#left{float:left;border:2px:width:0}" +
                 "#right{float:left;border:2px;width:0}" +
@@ -74,7 +76,7 @@ public class HighLight {
                 code += temp;
                 j++;
             }
-            code += "</div></body></pre></html>";
+            code += "</div></body>"+"</font>"+"</pre></html>";
             code = Change(code,choice);
             if(choice == 1 || choice == 2){
                 code = code.replaceAll("(#.*?)</br>","<font color=green>$1</font></br>");
@@ -83,10 +85,17 @@ public class HighLight {
             code = code.replaceAll("(//.*?)</br>","<font color=green>$1</font></br>");
             code = t + code;
         } else {
-            System.out.println("æ–‡ä»¶ä¸å­˜åœ¨");
+            System.out.println("ÎÄ¼ş²»´æÔÚ");
         }
         input.close();
     }
+
+    /**
+     * ¸ù¾İ²»Í¬µÄÓïÑÔ»ñÈ¡¹Ø¼ü×Ö£¬²¢¶Ô¹Ø¼ü×Ö½øĞĞ¸ßÁ¿
+     * @param temp  Ô´´úÂëĞĞ
+     * @param choice ²»Í¬µÄ³ÌĞòÓïÑÔÀàĞÍ
+     * @return ·µ»Ø¸ßÁ¿ºóµÄHTMLÓï·¨´úÂë
+     */
     public String Change(String temp,int choice){
         key k = new key(choice);
         ArrayList<String> s = k.getJavakey();
@@ -95,6 +104,12 @@ public class HighLight {
         }
         return temp;
     }
+
+    /**
+     * ½«×ª»¯ºó´úÂëĞ´ÈëÏàÓ¦µÄÎÄ¼ş
+     * @param path  Ğ´ÈëÎÄ¼şÂ·¾¶
+     * @throws IOException
+     */
     public void WriteToFile(String path) throws IOException {
         File file = new File(path);
         if(!file.exists()){
