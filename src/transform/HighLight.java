@@ -73,11 +73,11 @@ public class HighLight {
                     temp = temp.replace("*/", "*/</font>");
                 }
                 temp += "</br>";
+                temp = Change(temp,choice);
                 code += temp;
                 j++;
             }
             code += "</div></body>"+"</font>"+"</pre></html>";
-            code = Change(code,choice);
             if(choice == 1 || choice == 2){
                 code = code.replaceAll("(#.*?)</br>","<font color=green>$1</font></br>");
                 System.out.println("OK");
@@ -99,8 +99,17 @@ public class HighLight {
     public String Change(String temp,int choice){
         key k = new key(choice);
         ArrayList<String> s = k.getJavakey();
+        int is = 0;
+        if(temp.matches("^//.*?$")){
+        	System.out.println("Ok");
+        	is = 1;
+        }
         for(int i = 0; i < s.size(); i++) {
             temp = temp.replaceAll("\\b" + s.get(i) + "\\b", "<b><font color='"+color+"'>" + s.get(i) + "</font></b>");
+        }
+        if(is == 1){
+        	temp = temp.replaceAll("(\'.*?[^\\\\]\')","");
+        	//temp.replaceAll("<font color='" + color + "'>","<font>");
         }
         return temp;
     }

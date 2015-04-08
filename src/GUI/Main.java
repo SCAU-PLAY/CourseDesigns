@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+
 import transform.Descend;
 /**
  * Created by Jiarui on 2015/1/30.
@@ -51,7 +52,7 @@ public class Main extends JFrame implements ActionListener{
         }
         
         
-        
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         WordSize = new JLabel("请选择字体大小:");
         WordSize.setSize(120, 30);
         WordSize.setLocation(600, 0);
@@ -59,7 +60,6 @@ public class Main extends JFrame implements ActionListener{
         WordSizeSelect = new JComboBox<String>(model);
         WordSizeSelect.setSize(80, 30);
         WordSizeSelect.addActionListener(this);
-        WordSizeSelect.setLocation(705, 0);
         for(int i=1;i<=6;i++)
         {
         	WordSizeSelect.addItem("+"+i+"号字体");
@@ -68,6 +68,16 @@ public class Main extends JFrame implements ActionListener{
         {
         	WordSizeSelect.addItem(""+i+"号字体");
         }
+        
+        newFile = new JPanel();
+        newFile.setLayout(new FlowLayout());
+        newFile.add(WordSize);
+        newFile.add(WordSizeSelect);
+        newFile.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "请先选择字体大小", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("黑体", newFile.getFont().getStyle(), 12)));
+        
+        jPanel = new JPanel();
+        jPanel.setLayout(new BorderLayout(0, 10));
+        jPanel.add(newFile, BorderLayout.NORTH);
         
         View_list view_list = new View_list();
         JTree tree = view_list.InitTree();  //获取初始化后的JTree对象
@@ -80,28 +90,17 @@ public class Main extends JFrame implements ActionListener{
         jScrollPaneOfList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "待转换源代码文件", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("黑体", jScrollPaneOfList.getFont().getStyle(), 12)));
         jScrollPaneOfNewFile = new JScrollPane(list1);
         jScrollPaneOfNewFile.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "转换后HTML文件", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font("黑体", jScrollPaneOfNewFile.getFont().getStyle(), 12)));
-        newFile = new JPanel();
-        newFile.add(WordSize);
-        newFile.add(WordSizeSelect);
         right = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jScrollPaneOfList, jScrollPaneOfNewFile);
+        jPanel.add(right, BorderLayout.CENTER);
         right.setDividerLocation(220);
         right.setLastDividerLocation(200);
         right.setDividerSize(5);
-        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,directory, right);
+        jSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,directory, jPanel);
         jSplitPane.setSize(800, 500);
         jSplitPane.setLocation(0, 30);
         
-        jPanel = new JPanel();
-        jPanel.setSize(500, 30);
-        jPanel.setLocation(0, 0);
-        jPanel.setBackground(Color.pink);
-        jPanel.setLayout(null);
-        jPanel.add(WordSize);
-        jPanel.add(WordSizeSelect);
-        
         
         this.add(jSplitPane);
-        this.add(jPanel);
         
         jSplitPane.setDividerLocation(200);
         jSplitPane.setLastDividerLocation(200);
